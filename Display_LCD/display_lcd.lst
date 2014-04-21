@@ -1,0 +1,258 @@
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 1
+
+
+
+
+
+       MCS-51 Family Macro Assembler   A S E M - 5 1   V 1.3
+       =====================================================
+
+
+
+	Source File:	G:\icei\ensamblador8051\Display_LCD\display_lcd.asm
+	Object File:	G:\icei\ensamblador8051\Display_LCD\display_lcd.hex
+	List File:	G:\icei\ensamblador8051\Display_LCD\display_lcd.lst
+
+
+
+ Line  I  Addr  Code            Source
+
+    1:		N      0400	mensajes equ 400h
+    2:		N      0500	mensaje2 equ 500h
+    3:		B      00A0	rs equ P2.0
+    4:		B      00A1	en equ P2.1
+    5:		D      0080	bus equ P0
+    6:		N      0030	func_set_8 equ 30h
+    7:		N      0020	func_set_4 equ 20h
+    8:		N      0028	fun_set_4x2 equ 28h
+    9:		N      0001	clear_lcd equ 01h
+   10:		N      0008	display_off equ 08h
+   11:		N      0004	entry_mode_set equ 04h
+   12:		N      0000	ir equ 0h
+   13:		N      0001	dr equ 1h
+   14:		N      0000		org 0h
+   15:	  0000	7B B4			mov r3,#180
+   16:	  0002	12 00 55		call delay
+   17:	  0005	AD 00			mov r5,ir
+   18:	  0007	E5 30			mov a,func_set_8
+   19:	  0009	12 00 43		call carga_lcd
+   20:	  000C	7B 5C			mov r3,#92
+   21:
+   22:	  000E			Leer_msg:
+   23:				;Verificar si la tecla oprimida es >=A8
+   24:	  000E	20 E3 05		jb acc.3, grupo2
+   25:	  0011	90 04 00		mov dptr, #400H
+   26:	  0014	80 05			sjmp multi
+   27:	  0016	90 05 00	grupo2: mov dptr, #500H
+   28:	  0019	94 08			subb a,#8
+   29:	  001B	75 F0 20	multi:	mov b,#20h
+   30:	  001E	A4			mul ab
+   31:	  001F			de_nuevo:
+   32:	  001F	FA			mov r2,A ;Respalda el valor de A
+   33:	  0020	AB 20			mov r3, 20h
+   34:
+   35:				;Leer caracter del mensaje
+   36:	  0022	93			movc a,@a+dptr
+   37:	  0023	D3			setb c
+   38:	  0024	12 00 43		lcall carga_lcd
+   39:	  0027	79 01			mov r1,#01
+   40:	  0029	12 00 55		lcall delay
+   41:	  002C	1B			dec r3
+   42:	  002D	BB 10 0F		cjne r3,#10h,fin_lin2
+   43:
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 2
+
+
+
+ Line  I  Addr  Code            Source
+
+   44:				;Cambio a la linea 2 del LCD
+   45:	  0030	74 C0			mov a,#0C0h
+   46:	  0032	C3			clr c
+   47:	  0033	12 00 43		lcall carga_lcd
+   48:	  0036	79 01			mov r1,#01
+   49:	  0038	12 00 55		lcall delay
+   50:	  003B	EA			mov a,r2
+   51:	  003C	04			inc a
+   52:	  003D	80 E0			sjmp de_nuevo
+   53:	  003F			fin_lin2:
+   54:	  003F	BB 14 00		cjne r3,#20,sig_chr
+						    ^
+			  @@@@@ symbol not defined @@@@@
+
+   55:					;sjmp otro
+   56:	  0042	22			ret
+   57:
+   58:	  0043			carga_lcd:
+   59:	  0043	C2 A1			clr en
+   60:	  0045	92 A0			mov rs,c
+   61:	  0047	D2 A1			setb en
+   62:	  0049	F5 80			mov bus,a
+   63:	  004B	C2 A1			clr en
+   64:	  004D	C4			swap a
+   65:	  004E	D2 A1			setb en
+   66:	  0050	F5 80			mov bus,a
+   67:	  0052	C2 A1			clr en
+   68:	  0054	22			ret
+   69:
+   70:				;Subrutina espera
+   71:	  0055	7A 17		delay:	mov r2,#23
+   72:	  0057	DA FE		aqui:	djnz r2,aqui
+   73:	  0059	DB FA			djnz r3,delay
+   74:	  005B	22			ret
+   75:
+   76:		N      0400		org mensajes
+   77:	  0400	4D 65 6E 73		db "Mensaje 1"
+	  0404	61 6A 65 20
+	  0408	31
+   78:	  0409	4D 65 6E 73		db "Mensaje 2"
+	  040D	61 6A 65 20
+	  0411	32
+   79:	  0412	4D 65 6E 73		db "Mensaje 3"
+	  0416	61 6A 65 20
+	  041A	33
+   80:
+   81:		N      0500		org mensaje2
+   82:	  0500	4D 65 6E 73		db "Mensaje 4"
+	  0504	61 6A 65 20
+	  0508	34
+   83:	  0509	4D 65 6E 73		db "Mensaje 5"
+	  050D	61 6A 65 20
+	  0511	35
+   84:	  0512	4D 65 6E 73		db "Mensaje 6"
+	  0516	61 6A 65 20
+	  051A	36
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 3
+
+
+
+ Line  I  Addr  Code            Source
+
+   85:
+   86:					end
+
+
+
+
+
+                     register banks used:  ---
+
+                     1 error detected
+
+
+
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 4
+
+
+
+
+
+	       L I S T   O F   S Y M B O L S
+	       =============================
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+??ASEM_51			  NUMBER    8051
+??VERSION			  NUMBER    0130
+AC				  BIT	      D6
+ACC				  DATA	      E0
+AQUI				  CODE	    0057	  72
+B				  DATA	      F0
+BUS				  NUMBER    0080	   5
+CARGA_LCD			  CODE	    0043	  58
+CLEAR_LCD			  NUMBER    0001	   9
+CY				  BIT	      D7
+DELAY				  CODE	    0055	  71
+DE_NUEVO			  CODE	    001F	  31
+DISPLAY_OFF			  NUMBER    0008	  10
+DPH				  DATA	      83
+DPL				  DATA	      82
+DR				  NUMBER    0001	  13
+EA				  BIT	      AF
+EN				  NUMBER    00A1	   4
+ENTRY_MODE_SET			  NUMBER    0004	  11
+ES				  BIT	      AC
+ET0				  BIT	      A9
+ET1				  BIT	      AB
+EX0				  BIT	      A8
+EX1				  BIT	      AA
+EXTI0				  CODE	    0003
+EXTI1				  CODE	    0013
+F0				  BIT	      D5
+FIN_LIN2			  CODE	    003F	  53
+FUNC_SET_4			  NUMBER    0020	   7
+FUNC_SET_8			  NUMBER    0030	   6
+FUN_SET_4X2			  NUMBER    0028	   8
+GRUPO2				  CODE	    0016	  27
+IE				  DATA	      A8
+IE0				  BIT	      89
+IE1				  BIT	      8B
+INT0				  BIT	      B2
+INT1				  BIT	      B3
+IP				  DATA	      B8
+IR				  NUMBER    0000	  12
+IT0				  BIT	      88
+IT1				  BIT	      8A
+LEER_MSG			  CODE	    000E	  22
+MENSAJE2			  NUMBER    0500	   2
+MENSAJES			  NUMBER    0400	   1
+MULTI				  CODE	    001B	  29
+OV				  BIT	      D2
+P				  BIT	      D0
+P0				  DATA	      80
+P1				  DATA	      90
+P2				  DATA	      A0
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 5
+
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+P3				  DATA	      B0
+PCON				  DATA	      87
+PS				  BIT	      BC
+PSW				  DATA	      D0
+PT0				  BIT	      B9
+PT1				  BIT	      BB
+PX0				  BIT	      B8
+PX1				  BIT	      BA
+RB8				  BIT	      9A
+RD				  BIT	      B7
+REN				  BIT	      9C
+RESET				  CODE	    0000
+RI				  BIT	      98
+RS				  NUMBER    00A0	   3
+RS0				  BIT	      D3
+RS1				  BIT	      D4
+RXD				  BIT	      B0
+SBUF				  DATA	      99
+SCON				  DATA	      98
+SINT				  CODE	    0023
+SM0				  BIT	      9F
+SM1				  BIT	      9E
+SM2				  BIT	      9D
+SP				  DATA	      81
+T0				  BIT	      B4
+T1				  BIT	      B5
+TB8				  BIT	      9B
+TCON				  DATA	      88
+TF0				  BIT	      8D
+TF1				  BIT	      8F
+TH0				  DATA	      8C
+TH1				  DATA	      8D
+TI				  BIT	      99
+TIMER0				  CODE	    000B
+TIMER1				  CODE	    001B
+TL0				  DATA	      8A
+TL1				  DATA	      8B
+TMOD				  DATA	      89
+TR0				  BIT	      8C
+TR1				  BIT	      8E
+TXD				  BIT	      B1
+WR				  BIT	      B6
