@@ -1,0 +1,193 @@
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 1
+
+
+
+
+
+       MCS-51 Family Macro Assembler   A S E M - 5 1   V 1.3
+       =====================================================
+
+
+
+	Source File:	G:\icei\ensamblador8051\Display4\display4.asm
+	Object File:	G:\icei\ensamblador8051\Display4\display4.hex
+	List File:	G:\icei\ensamblador8051\Display4\display4.lst
+
+
+
+ Line  I  Addr  Code            Source
+
+    1:		N      0030	xl equ 30h
+    2:		N      0031	xh equ 31h
+    3:		N      0032	yl equ 32h
+    4:		N      0033	yh equ 33h
+    5:		N      0034	zl equ 34h
+    6:		N      0035	zh equ 35h
+    7:		N      0036	n equ 36h
+    8:		N      0037	digito1 equ 37h
+    9:		N      0038	digito2 equ 38h
+   10:		N      0039	digito3 equ 39h
+   11:		N      0040	digito4 equ 40h
+   12:
+   13:		N      0000		org 0h
+   14:
+   15:	  0000	75 36 14	inicio:	mov n,#20  ;20 Numeros hasta 4 digitos
+   16:	  0003	75 30 FF		mov xl,#255;Carga la parte baja de X
+   17:	  0006	75 31 FF		mov xh,#255;Carga la parte alta de X
+   18:
+   19:	  0009	75 32 01		mov yl,#1  ;Carga la parte baja de Y
+   20:	  000C	75 33 00		mov yh,#0  ;Carga la parte alta de y
+   21:
+   22:	  000F	12 00 2C	loop:	call suma16;Suma x+y
+   23:
+   24:	  0012	E5 32			mov a,yl
+   25:	  0014	D4			da a
+   26:	  0015	F5 37			mov 37h,a
+   27:
+   28:	  0017	E5 32			mov A,yl   ;Mueve la parte baja de Y a X
+   29:	  0019	F5 30			mov xl,A
+   30:	  001B	E5 33			mov A,yh   ;Mueve la parte alta de Y a X
+   31:	  001D	F5 31			mov xh,A
+   32:
+   33:	  001F	E5 34			mov A,zl   ;Mueve la parte baja de Z a Y
+   34:	  0021	F5 32			mov yl,A
+   35:	  0023	E5 35			mov A,zh   ;Mueve la parte alta de Z a Y
+   36:	  0025	F5 33			mov yh,A
+   37:
+   38:	  0027	D5 36 E5		djnz n,loop
+   39:	  002A	80 D4			sjmp inicio
+   40:
+   41:	  002C	E5 30		suma16:	mov A,xl
+   42:	  002E	25 32			add A,yl
+   43:	  0030	F5 34			mov zl,A
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 2
+
+
+
+ Line  I  Addr  Code            Source
+
+   44:	  0032	E5 31			mov A,xh
+   45:	  0034	35 33			addc A,yh
+   46:	  0036	F5 35			mov zh,A
+   47:	  0038	22			ret
+   48:
+   49:
+   50:					end
+
+
+
+
+
+                     register banks used:  ---
+
+                     no errors
+
+
+
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 3
+
+
+
+
+
+	       L I S T   O F   S Y M B O L S
+	       =============================
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+??ASEM_51			  NUMBER    8051
+??VERSION			  NUMBER    0130
+AC				  BIT	      D6
+ACC				  DATA	      E0
+B				  DATA	      F0
+CY				  BIT	      D7
+DIGITO1				  NUMBER    0037	   8
+DIGITO2				  NUMBER    0038	   9
+DIGITO3				  NUMBER    0039	  10
+DIGITO4				  NUMBER    0040	  11
+DPH				  DATA	      83
+DPL				  DATA	      82
+EA				  BIT	      AF
+ES				  BIT	      AC
+ET0				  BIT	      A9
+ET1				  BIT	      AB
+EX0				  BIT	      A8
+EX1				  BIT	      AA
+EXTI0				  CODE	    0003
+EXTI1				  CODE	    0013
+F0				  BIT	      D5
+IE				  DATA	      A8
+IE0				  BIT	      89
+IE1				  BIT	      8B
+INICIO				  CODE	    0000	  15
+INT0				  BIT	      B2
+INT1				  BIT	      B3
+IP				  DATA	      B8
+IT0				  BIT	      88
+IT1				  BIT	      8A
+LOOP				  CODE	    000F	  22
+N				  NUMBER    0036	   7
+OV				  BIT	      D2
+P				  BIT	      D0
+P0				  DATA	      80
+P1				  DATA	      90
+P2				  DATA	      A0
+P3				  DATA	      B0
+PCON				  DATA	      87
+PS				  BIT	      BC
+PSW				  DATA	      D0
+PT0				  BIT	      B9
+PT1				  BIT	      BB
+PX0				  BIT	      B8
+PX1				  BIT	      BA
+RB8				  BIT	      9A
+RD				  BIT	      B7
+REN				  BIT	      9C
+RESET				  CODE	    0000
+RI				  BIT	      98
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 4
+
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+RS0				  BIT	      D3
+RS1				  BIT	      D4
+RXD				  BIT	      B0
+SBUF				  DATA	      99
+SCON				  DATA	      98
+SINT				  CODE	    0023
+SM0				  BIT	      9F
+SM1				  BIT	      9E
+SM2				  BIT	      9D
+SP				  DATA	      81
+SUMA16				  CODE	    002C	  41
+T0				  BIT	      B4
+T1				  BIT	      B5
+TB8				  BIT	      9B
+TCON				  DATA	      88
+TF0				  BIT	      8D
+TF1				  BIT	      8F
+TH0				  DATA	      8C
+TH1				  DATA	      8D
+TI				  BIT	      99
+TIMER0				  CODE	    000B
+TIMER1				  CODE	    001B
+TL0				  DATA	      8A
+TL1				  DATA	      8B
+TMOD				  DATA	      89
+TR0				  BIT	      8C
+TR1				  BIT	      8E
+TXD				  BIT	      B1
+WR				  BIT	      B6
+XH				  NUMBER    0031	   2
+XL				  NUMBER    0030	   1
+YH				  NUMBER    0033	   4
+YL				  NUMBER    0032	   3
+ZH				  NUMBER    0035	   6
+ZL				  NUMBER    0034	   5
