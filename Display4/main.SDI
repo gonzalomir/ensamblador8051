@@ -1,0 +1,39 @@
+,,,        org 0h
+0000,75 30 02,,        mov 30h,#2
+0003,75 31 03,,        mov 31h,#3
+0006,75 32 08,,        mov 32h,#8
+0009,75 33 07,,        mov 33h,#7
+000C,7B 01,inicio,inicio: mov R3,#1       ;digito
+000E,78 30,,        mov R0,#30h     ;indice
+0010,90 00 2E,loop,loop:   mov DPTR,#digito
+0013,E6,,        mov A,@R0
+0014,93,,        movc A,@A+DPTR
+0015,8B A0,,        mov P2,R3
+0017,F5 90,,        mov P1,A
+0019,12 00 25,,        call retardo
+001C,08,,        inc R0
+001D,EB,,        mov A,R3
+001E,23,,        rl A
+001F,FB,,        mov R3,A
+0020,B8 34 ED,,        cjne R0,#34h,loop
+0023,80 E7,,        sjmp inicio
+,,,
+0025,7E 01,retardo,retardo:mov R6,#1
+0027,7F F9,delay1,delay1: mov R7,#249
+0029,DF FE,delay2,delay2: djnz R7,delay2
+002B,DE FA,,        djnz R6,delay1
+002D,22,,        ret
+,,,          ;.abcdefg
+002E,3E,digito,digito: db 00111110B ;0
+002F,30,,        db 00110000B ;1
+0030,6D,,        db 01101101B ;2
+0031,79,,        db 01111001B ;3
+0032,33,,        db 00110011B ;4
+0033,5B,,        db 01011011B ;5
+0034,7F,,        db 01111111B ;6
+0035,70,,        db 01110000B ;7
+0036,7F,,        db 01111111B ;8
+0037,7B,,        db 01111011B ;9
+,,,
+000E,,,        end
+,,,
